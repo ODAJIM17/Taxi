@@ -54,13 +54,31 @@ namespace Taxi.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Plate")] TaxiEntity taxiEntity)
+        public async Task<IActionResult> Create(TaxiEntity taxiEntity)
         {
             if (ModelState.IsValid)
             {
+                taxiEntity.Plate = taxiEntity.Plate.ToUpper();
                 _context.Add(taxiEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+
+                    if (ex.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Plate Number Already exist. Please check and try again.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+
+                }
             }
             return View(taxiEntity);
         }
@@ -86,7 +104,7 @@ namespace Taxi.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Plate")] TaxiEntity taxiEntity)
+        public async Task<IActionResult> Edit(int id, TaxiEntity taxiEntity)
         {
             if (id != taxiEntity.Id)
             {
@@ -97,8 +115,26 @@ namespace Taxi.Web.Controllers
             {
                 try
                 {
+                    taxiEntity.Plate = taxiEntity.Plate.ToUpper();
                     _context.Update(taxiEntity);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+
+                        if (ex.InnerException.Message.Contains("duplicate"))
+                        {
+                            ModelState.AddModelError(string.Empty, "Plate Number Already exist. Please check and try again.");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                        }
+
+                        return View(taxiEntity);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href=" https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
 
 
-<div class="card border-info">
+<div class="card border-secondary">
     <div class="card-header">
         <div class="card-title"><h5> Taxis Plate List </h5></div>
 
@@ -20,7 +20,10 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Plate)
                     </th>
-                    <th> <a class="btn btn-sm btn-primary" asp-action="Create"><i class="fas fa-plus-circle"></i> Create New</a></th>
+                    <th>
+                        <a class="btn btn-sm btn-primary" asp-action="Create"><i class="fas fa-plus-circle"></i> Create New</a>
+                        @*<a href="#addPlateModal" class="btn btn-sm btn-primary" data-toggle="modal"><i class="fas fa-plus-circle"></i> Add New</a>*@
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -31,8 +34,8 @@
                             @Html.DisplayFor(modelItem => item.Plate)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm"><i class="fas fa-pencil-alt"></i> </a> 
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm"><i class="fas fa-list-alt"></i> </a> 
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm"><i class="fas fa-pencil-alt"></i> </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-success btn-sm"><i class="fas fa-list-alt"></i> </a>
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
@@ -40,7 +43,33 @@
             </tbody>
         </table>
     </div>
+</div>
 
+<!--Add modal form-->
+<div id="addPlateModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-controller="Taxis" asp-action="Create">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <h5>Add Plate</h5>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" ari-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Plate Number</label>
+                        <input type="text" class="form-control" required name="Plate" />
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-primary" data-dismiss="modal" value="cancel" />
+                    <input type="submit" class="btn btn-success" value="Add" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
