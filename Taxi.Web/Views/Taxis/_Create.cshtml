@@ -1,0 +1,27 @@
+﻿@*@model Taxi.Web.Data.Entities.TaxiEntity*@
+    <div id="addPlateModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-controller="Taxis" asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <h5>Add Plate</h5>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" ari-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Plate Number</label>
+                            <input type="text" class="form-control" required name="Plate" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-primary" data-dismiss="modal" value="cancel" />
+                        <input type="submit" class="btn btn-success" value="Add" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
