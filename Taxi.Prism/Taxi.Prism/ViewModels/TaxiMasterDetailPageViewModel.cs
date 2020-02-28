@@ -32,19 +32,19 @@ namespace Taxi.Prism.ViewModels
                 {
                     Icon = "ic_local_taxi",
                     PageName = "TaxiHistoryPage",
-                    Title = "See taxi history"
+                    Title = "View taxi history"
                 },
                 new Menu
                 {
                     Icon = "ic_people",
                     PageName = "GroupPage",
-                    Title = "Admin my user group"
+                    Title = "Admin user group"
                 },
                 new Menu
                 {
                     Icon = "ic_person_pin",
                     PageName = "ModifyUserPage",
-                    Title = "Modify User"
+                    Title = "User profile"
                 },
                 new Menu
                 {

@@ -13,7 +13,8 @@
                 <ListView BackgroundColor="Transparent"
                 	      ItemsSource="{Binding Menus}"
                 	      HasUnevenRows="True"
-                	      SeparatorVisibility="None">
+                	      SeparatorVisibility="Default" 
+                          SeparatorColor="Red">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
