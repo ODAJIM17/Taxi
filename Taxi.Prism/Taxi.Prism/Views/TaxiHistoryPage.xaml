@@ -2,8 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="true"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Taxi.Prism.Views.TaxiHistoryPage"
+             BackgroundColor="{StaticResource ColorBackgroud}"
              Title="{Binding Title}">
 
     <AbsoluteLayout>
@@ -11,21 +14,17 @@
                      AbsoluteLayout.LayoutFlags="All" 
                      Padding="5">
             <StackLayout Orientation="Horizontal">
-                <Label Text="Plate"
-                   VerticalOptions="Center"/>
+                
                 <Entry HorizontalOptions="FillAndExpand" 
-                   Placeholder="Enter plate..." 
+                   Placeholder="Enter plate number..." 
                    PlaceholderColor="Navy"
                    Text="{Binding Plate}"
                    VerticalOptions="Center"/>
 
                 <Button BackgroundColor="Navy"
                     Command="{Binding CheckPlateCommand}"
-                    CornerRadius="20"
-                    HeightRequest="40"
                     Margin="10,0"
-                    Text="Check Plate"
-                    TextColor="White"/>
+                    Text="Search"/>
             </StackLayout>
             <Label FontAttributes="Bold" 
                FontSize="20"
@@ -38,11 +37,13 @@
                HorizontalOptions="Center"
                Text="{Binding Taxi.Qualification, StringFormat='{0:N2}'}"/>
             <StackLayout Orientation="Horizontal">
-                <Label Text="Number of trips:"/>
+                <Label Text="Number of trips:" 
+                       FontAttributes="Bold"/>
                 <Label Text="{Binding Taxi.NumberOfTrips, StringFormat='{0:N0}'}"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal">
-                <Label Text="Driver:"/>
+                <Label Text="Driver:" 
+                       FontAttributes="Bold"/>
                 <Label Text="{Binding Taxi.User.FullName, StringFormat='{0:N0}'}"/>
             </StackLayout>
             <Grid>
@@ -66,13 +67,16 @@
                    Text="Remarks"/>
             </Grid>
 
-            <CollectionView ItemsSource="{Binding Taxi.Trips}">
+            <CollectionView ItemsSource="{Binding Details}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTripCommand} "/>
+                            </Grid.GestureRecognizers>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width=".8*" />
                                 <ColumnDefinition Width=".5*" />
@@ -86,6 +90,8 @@
                                Text="{Binding Qualification, StringFormat='{0:N2}'}"
                                VerticalOptions="Center"/>
                             <Label Grid.Column="2"
+                               MaxLines="2"
+                                   LineBreakMode="TailTruncation"
                                Text="{Binding Remarks}"
                                VerticalOptions="Center"/>
                             <Image Grid.Column="3" 
