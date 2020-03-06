@@ -24,6 +24,6 @@ namespace Taxi.Web.Helpers
 
         Task LogoutAsync();
 
-
+        Task<UserEntity> AddUserAsync(AddUserViewModel model, string path);
     }
 }
