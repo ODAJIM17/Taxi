@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Taxi.Common.Enums;
 using Taxi.Web.Data.Entities;
@@ -20,10 +18,21 @@ namespace Taxi.Web.Helpers
             RoleManager<IdentityRole> roleManager,
             SignInManager<UserEntity> signInManager)
         {
-                _userManager = userManager;
-                _roleManager = roleManager;
-                _signInManager = signInManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(UserEntity user, string token)
+        {
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GenerateEmailConfirmationTokenAsync(UserEntity user)
+        {
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
 
         public async Task<SignInResult> ValidatePasswordAsync(UserEntity user, string password)
         {

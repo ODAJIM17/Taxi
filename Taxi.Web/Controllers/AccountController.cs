@@ -18,12 +18,14 @@ namespace Taxi.Web.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IImageHelper _imageHelper;
         private readonly ICombosHelper _combosHelper;
+        private readonly IMailHelper _mailHelper;
         private readonly IConfiguration _configuration;
 
         public AccountController(
             IUserHelper userHelper,
             IImageHelper imageHelper,
             ICombosHelper combosHelper,
+            IMailHelper mailHelper,
             IConfiguration configuration)
 
         {
@@ -31,6 +33,7 @@ namespace Taxi.Web.Controllers
             _configuration = configuration;
             _imageHelper = imageHelper;
             _combosHelper = combosHelper;
+            _mailHelper = mailHelper;
         }
         public IActionResult Login()
         {
@@ -82,6 +85,27 @@ namespace Taxi.Web.Controllers
             return BadRequest();
         }
 
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            UserEntity user = await _userHelper.GetUserAsync(new Guid(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            Microsoft.AspNetCore.Identity.IdentityResult result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
 
 
         [HttpPost]
@@ -147,19 +171,26 @@ namespace Taxi.Web.Controllers
                     return View(model);
                 }
 
-                var loginViewModel = new LoginViewModel
+                var myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var tokenLink = Url.Action("ConfirmEmail", "Account", new
                 {
-                    Password = model.Password,
-                    RememberMe = false,
-                    Username = model.Username
-                };
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
 
-                var result2 = await _userHelper.LoginAsync(loginViewModel);
-
-                if (result2.Succeeded)
+                var response = _mailHelper.SendMail(model.Username, "Email confirmation", 
+                    $"<h1>Email Confirmation</h1>" +
+                    $"Thank you for registering., " +
+                    $"Please click in this link to:</br></br><a href = \"{tokenLink}\">Confirm your Email</a>");
+                if (response.IsSuccess)
                 {
-                    return RedirectToAction("Index", "Home");
+                    ViewBag.Message = "A confirmation email has been sent to you. " +
+                        "Please follow the instructions in the email to confirm your email address.";
+                    return View(model);
                 }
+
+                ModelState.AddModelError(string.Empty, response.Message);
+
             }
 
             model.UserTypes = _combosHelper.GetComboRoles();

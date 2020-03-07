@@ -29,8 +29,8 @@ namespace Taxi.Web.Data
             await CheckRolesAsync();
             var admin = await CheckUserAsync("1010", "Jimmy", "Davila", "davila56jd@gmail.com", "786 367 2747", "9856 NW 141 Terr", UserType.Admin);
             var driver = await CheckUserAsync("2020", "Jimmy", "Davila", "Davilajimmy@hotmail.com", "350 634 2747", "123 Main Street", UserType.Driver);
-            var user1 = await CheckUserAsync("3030", "Odalys Davila", "Zuluaga", "odalys77@gmail.com", "350 634 2747", "453 Miami Lakes", UserType.User);
-            var user2 = await CheckUserAsync("4040", "Juan", "Zuluaga", "jsndavila1@gmail.com", "350 634 2747", "Calle Luna Calle Sol", UserType.User);
+            var user1 = await CheckUserAsync("3030", "Odalys", "Davila", "odalys77@gmail.com", "350 634 2747", "453 Miami Lakes", UserType.User);
+            var user2 = await CheckUserAsync("4040", "Jason", "Davila", "jsndavila1@gmail.com", "350 634 2747", "Calle Luna Calle Sol", UserType.User);
             await CheckTaxisAsync(driver, user1, user2);
 
         }
@@ -61,6 +61,10 @@ namespace Taxi.Web.Data
 
                 await _userHelper.AddUserAsync(user, "123456");
                 await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
             }
 
             return user;
