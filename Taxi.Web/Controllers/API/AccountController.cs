@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Taxi.Common.Enums;
@@ -15,25 +18,33 @@ namespace Taxi.Web.Controllers.API
     [Route("api/[Controller]")]
     public class AccountController : ControllerBase
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly IMailHelper _mailHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
 
         public AccountController(
-            DataContext dataContext,
+            DataContext context,
             IUserHelper userHelper,
             IMailHelper mailHelper,
             IImageHelper imageHelper,
             IConverterHelper converterHelper)
         {
-            _dataContext = dataContext;
+            _context = context;
             _userHelper = userHelper;
             _mailHelper = mailHelper;
             _imageHelper = imageHelper;
             _converterHelper = converterHelper;
         }
+
+
+       
+
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] UserRequest request)
